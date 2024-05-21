@@ -211,12 +211,8 @@ function installWireGuard() {
 
 	chmod 600 -R /etc/wireguard/
 
-	# prompt user for private key
-	read -p "Enter server private key: " SERVER_PRIV_KEY
-
-	# generate public key
+	SERVER_PRIV_KEY=$(wg genkey)
 	SERVER_PUB_KEY=$(echo "${SERVER_PRIV_KEY}" | wg pubkey)
-	echo "Generated public key: ${SERVER_PUB_KEY}"
 
 	# Save WireGuard settings
 	echo "SERVER_PUB_IP=${SERVER_PUB_IP}
@@ -353,7 +349,7 @@ function newClient() {
 	read -p "Enter client's private key: " CLIENT_PRIV_KEY
 	CLIENT_PUB_KEY=$(echo "${CLIENT_PRIV_KEY}" | wg pubkey)
 	echo "Generated public key: ${CLIENT_PUB_KEY}"
-	read -p "Enter client's private key: " CLIENT_PRE_SHARED_KEY
+	CLIENT_PRE_SHARED_KEY=$(wg genpsk)
 
 	HOME_DIR=$(getHomeDirForClient "${CLIENT_NAME}")
 
